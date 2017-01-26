@@ -24,7 +24,7 @@ const hidingSpots = []
 
 })()
 
-let turnsRemaining = 3
+let turnsRemaining = 10
 
 export const checkHidingSpotForTreasure = id => {
 
