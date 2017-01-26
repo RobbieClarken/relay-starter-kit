@@ -1,12 +1,3 @@
-/**
- *  Copyright (c) 2015, Facebook, Inc.
- *  All rights reserved.
- *
- *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
- *  of patent rights can be found in the PATENTS file in the same directory.
- */
-
 import {
   GraphQLBoolean,
   GraphQLFloat,
@@ -17,7 +8,7 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
-} from 'graphql';
+} from 'graphql'
 
 import {
   connectionArgs,
@@ -27,7 +18,7 @@ import {
   globalIdField,
   mutationWithClientMutationId,
   nodeDefinitions,
-} from 'graphql-relay';
+} from 'graphql-relay'
 
 import {
   // Import methods that your schema can use to interact with your database
@@ -37,7 +28,7 @@ import {
   getViewer,
   getWidget,
   getWidgets,
-} from './database';
+} from './database'
 
 /**
  * We get the node interface and field from the Relay library.
@@ -47,25 +38,25 @@ import {
  */
 var {nodeInterface, nodeField} = nodeDefinitions(
   (globalId) => {
-    var {type, id} = fromGlobalId(globalId);
+    var {type, id} = fromGlobalId(globalId)
     if (type === 'User') {
-      return getUser(id);
+      return getUser(id)
     } else if (type === 'Widget') {
-      return getWidget(id);
+      return getWidget(id)
     } else {
-      return null;
+      return null
     }
   },
   (obj) => {
     if (obj instanceof User) {
-      return userType;
+      return userType
     } else if (obj instanceof Widget)  {
-      return widgetType;
+      return widgetType
     } else {
-      return null;
+      return null
     }
   }
-);
+)
 
 /**
  * Define your own types here
@@ -84,7 +75,7 @@ var userType = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
-});
+})
 
 var widgetType = new GraphQLObjectType({
   name: 'Widget',
@@ -97,13 +88,13 @@ var widgetType = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
-});
+})
 
 /**
  * Define your own connection types here
  */
 var {connectionType: widgetConnection} =
-  connectionDefinitions({name: 'Widget', nodeType: widgetType});
+  connectionDefinitions({name: 'Widget', nodeType: widgetType})
 
 /**
  * This is the type that will be the root of our query,
@@ -119,7 +110,7 @@ var queryType = new GraphQLObjectType({
       resolve: () => getViewer(),
     },
   }),
-});
+})
 
 /**
  * This is the type that will be the root of our mutations,
@@ -130,7 +121,7 @@ var mutationType = new GraphQLObjectType({
   fields: () => ({
     // Add your own mutations here
   })
-});
+})
 
 /**
  * Finally, we construct our schema (whose starting query type is the query
@@ -140,4 +131,4 @@ export var Schema = new GraphQLSchema({
   query: queryType,
   // Uncomment the following after adding some mutation fields:
   // mutation: mutationType
-});
+})
