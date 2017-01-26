@@ -1,24 +1,46 @@
-class User {}
-class Widget {}
+// Model types
+export class Game {}
+export class HidingSpot {}
 
 // Mock data
-var viewer = new User()
-viewer.id = '1'
-viewer.name = 'Anonymous'
+const game = new Game()
+game.id = '1'
 
-var widgets = ['What\'s-it', 'Who\'s-it', 'How\'s-it'].map((name, i) => {
-  var widget = new Widget();
-  widget.name = name;
-  widget.id = `${i}`;
-  return widget;
-})
+const hidingSpots = []
 
-module.exports = {
-  // Export methods that your schema can use to interact with your database
-  getUser: (id) => id === viewer.id ? viewer : null,
-  getViewer: () => viewer,
-  getWidget: (id) => widgets.find(w => w.id === id),
-  getWidgets: () => widgets,
-  User,
-  Widget,
+;(() => {
+
+  // Pick random spot
+  const indexOfSpotWithTreasure = Math.floor(Math.random() * 9)
+
+  let hidingSpot
+  for (let i = 0; i < 9; i++) {
+    hidingSpot = new HidingSpot()
+    hidingSpot.id = `${i}`
+    hidingSpot.hasTreasure = (i === indexOfSpotWithTreasure)
+    hidingSpot.hasBeenChecked = false
+    hidingSpots.push(hidingSpot)
+  }
+
+})()
+
+let turnsRemaining = 3
+
+export const checkHidingSpotForTreasure = id => {
+
+  // shortcut if hiding spot has been found already
+  if (hidingSpots.some(hs => hs.hasTreasure && hs.hasBeenChecked)) { return }
+
+  turnsRemaining--
+  const hidingSpot = getHidingSpot(id)
+  hidingSpot.hasBeenChecked = true
+
 }
+
+export const getHidingSpot = id => hidingSpots.find(hs => hs.id === id)
+
+export const getGame = () => game
+
+export const getHidingSpots = () => hidingSpots
+
+export const getTurnsRemaining = () => turnsRemaining
